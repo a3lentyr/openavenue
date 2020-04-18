@@ -1,4 +1,3 @@
-<meta name="viewport" content="width=650px;">
 <div class="container disable-dbl-tap-zoom">
 
   <div class="underboard">
@@ -13,10 +12,10 @@
   </div>
 
   <div class="overboard">
-    <table style="width:100%;height:100%">
+    <table style="width:100%;height:87.5%">
       <tr *ngFor="let row of dataRow">
         <td *ngFor="let column of dataColumn" class="boardCell unselectable" (click)="onClick(row,column)">
-          <svg *ngIf="getHiddenAngle(row,column)" width="90px" height="86px" viewBox="0 0 90 90">
+          <svg *ngIf="getHiddenAngle(row,column)" width="100%" height="50%" viewBox="0 0 90 90">
             <g [attr.transform]="'rotate('+getRotate(row,column)+' 45 45)'">
 
               <path d="M 45 45 l 45 0" stroke="black" stroke-width="10" fill="none" />
@@ -24,7 +23,7 @@
             </g>
           </svg>
 
-          <svg *ngIf="getHiddenline(row,column)" width="90px" height="86px" viewBox="0 0 90 90">
+          <svg *ngIf="getHiddenline(row,column)" width="100%" height="50%" viewBox="0 0 90 90">
             <g [attr.transform]="'rotate('+getRotate(row,column)+' 45 45)'">
 
               <path d="M 0 45 l 90 0" stroke="black" stroke-width="10" fill="none" />
@@ -38,28 +37,28 @@
 
   </div>
 
-</div>
-<div class="help">
-  <table style="width:100%;height:100%">
-    <tr>
-      <td *ngFor="let column of dataColumn" class="boardCell unselectable">
-        <svg *ngIf="getHiddenAngle(10,column)" width="90px" height="86px" viewBox="0 0 90 90">
-          <g [attr.transform]="'rotate('+getRotate(10,column)+' 45 45)'">
+  <div class="help">
+    <table style="width:100%;height:12.5%">
+      <tr>
+        <td *ngFor="let column of dataColumn" class="boardCell unselectable">
+          <svg *ngIf="getHiddenAngle(10,column)" width="100%" height="50%" viewBox="0 0 90 90">
+            <g [attr.transform]="'rotate('+getRotate(10,column)+' 45 45)'">
 
-            <path d="M 45 45 l 45 0" stroke="black" stroke-width="10" fill="none" />
-            <path d="M 45 45 l 0 45" stroke="black" stroke-width="10" fill="none" />
-          </g>
-        </svg>
+              <path d="M 45 45 l 45 0" stroke="black" stroke-width="10" fill="none" />
+              <path d="M 45 45 l 0 45" stroke="black" stroke-width="10" fill="none" />
+            </g>
+          </svg>
 
-        <svg *ngIf="getHiddenline(10,column)" width="90px" height="86px" viewBox="0 0 90 90">
-          <g [attr.transform]="'rotate('+getRotate(10,column)+' 45 45)'">
+          <svg *ngIf="getHiddenline(10,column)" width="100%" height="50%" viewBox="0 0 90 90">
+            <g [attr.transform]="'rotate('+getRotate(10,column)+' 45 45)'">
 
-            <path d="M 0 45 l 90 0" stroke="black" stroke-width="10" fill="none" />
-          </g>
-        </svg>
-        <span class="dataText">{{column+1}}</span>
+              <path d="M 0 45 l 90 0" stroke="black" stroke-width="10" fill="none" />
+            </g>
+          </svg>
+          <span class="dataText">{{column+1}}</span>
 
-      </td>
-    </tr>
-  </table>
+        </td>
+      </tr>
+    </table>
+  </div>
 </div>
