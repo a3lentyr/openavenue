@@ -1,41 +1,32 @@
 <div class="container disable-dbl-tap-zoom">
 
-  <div class="underboard">
-    <table style="width:100%;height:100%" class="backgroundTable">
-      <tr *ngFor="let row of dataRow" class="nopadding backgroundTableCell">
-        <td *ngFor="let column of dataColumn" class="boardCell nopadding backgroundTableCell">
-          <img [src]="getBackground(row,column)" class="backgroundCellImage" />
-        </td>
-      </tr>
-    </table>
 
-  </div>
+  <table style="width:100%;height:87.5%">
+    <tr *ngFor="let row of dataRow">
+      <td *ngFor="let column of dataColumn" class="boardCell backgroundTableCell unselectable"
+        (click)="onClick(row,column)">
+        <img [src]="getBackground(row,column)" class="backgroundCellImage" />
 
-  <div class="overboard">
-    <table style="width:100%;height:87.5%">
-      <tr *ngFor="let row of dataRow">
-        <td *ngFor="let column of dataColumn" class="boardCell unselectable" (click)="onClick(row,column)">
-          <svg *ngIf="getHiddenAngle(row,column)" width="100%" height="50%" viewBox="0 0 90 90">
-            <g [attr.transform]="'rotate('+getRotate(row,column)+' 45 45)'">
+        <svg *ngIf="getHiddenAngle(row,column)" width="100%" height="100%" viewBox="0 0 90 90" class="svgImage">
+          <g [attr.transform]="'rotate('+getRotate(row,column)+' 45 45)'">
 
-              <path d="M 45 45 l 45 0" stroke="black" stroke-width="10" fill="none" />
-              <path d="M 45 45 l 0 45" stroke="black" stroke-width="10" fill="none" />
-            </g>
-          </svg>
+            <path d="M 45 45 l 45 0" stroke="black" stroke-width="10" fill="none" />
+            <path d="M 45 45 l 0 45" stroke="black" stroke-width="10" fill="none" />
+          </g>
+        </svg>
 
-          <svg *ngIf="getHiddenline(row,column)" width="100%" height="50%" viewBox="0 0 90 90">
-            <g [attr.transform]="'rotate('+getRotate(row,column)+' 45 45)'">
+        <svg *ngIf="getHiddenline(row,column)" width="100%" height="100%" viewBox="0 0 90 90" class="svgImage">
+          <g [attr.transform]="'rotate('+getRotate(row,column)+' 45 45)'">
 
-              <path d="M 0 45 l 90 0" stroke="black" stroke-width="10" fill="none" />
-            </g>
-          </svg>
-          <span *ngIf="getHiddentext(row,column)" class="dataText">{{data[row + column * 7]}}</span>
+            <path d="M 0 45 l 90 0" stroke="black" stroke-width="10" fill="none" />
+          </g>
+        </svg>
+        <span *ngIf="getHiddentext(row,column)" class="dataText">{{data[row + column * 7]}}</span>
 
-        </td>
-      </tr>
-    </table>
+      </td>
+    </tr>
+  </table>
 
-  </div>
 
   <div class="help">
     <table style="width:100%;height:12.5%">
