@@ -1,0 +1,78 @@
+.overboard{
+    position: absolute;
+    left: 10px;
+    top: 10px;
+    width: 570px;
+    height: 660px;
+    z-index: 100;
+}
+.underboard{
+    position: absolute;
+    left: 10px;
+    top: 10px;
+    width: 570px;
+    height: 660px;
+    z-index: 0;
+
+}
+
+.boardCell{
+    position: relative;
+    width:16.667%;
+    height:14.286%;
+}
+
+.dataText{
+    position: absolute;
+    top: 35px;
+    left: 35px;
+    font-weight: bold;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    font-size: 20px;
+    color: #fff;
+    line-height: 20px;
+    text-align: center;
+    background: #000
+}
+
+.backgroundCellImage{
+    margin:auto;
+    display:block;
+}
+
+.nopadding{
+    padding:0;
+}
+
+.backgroundTable{
+    border: 0px;
+}
+.backgroundTableCell{
+    border: 0.1px solid black;
+}
+
+.container{
+    border-radius: 25px;
+    border: 5px solid #008080;
+    padding: 20px;
+    width: 550px;
+    height: 650px;
+    position: relative;
+}
+
+.unselectable {
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+.help{
+
+    width: 550px;
+    height: 100px;
+}
