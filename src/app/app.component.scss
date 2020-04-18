@@ -76,3 +76,14 @@
 .disable-dbl-tap-zoom {
     touch-action: manipulation;
   }
+
+
+.countText{
+    position: absolute;
+    bottom: 0;
+    right:0;
+    font-size: 15px;
+    color: #000;
+    line-height: 15px;
+    text-align: center;
+}

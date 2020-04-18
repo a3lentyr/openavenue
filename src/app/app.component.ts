@@ -11,12 +11,12 @@ export class AppComponent {
   dataColumn = [];
   dataRow = [];
   background = [
-    ["vvvr", "r", "v", "_C", "rr", "0", "_r"],
-    ["r", "vv", "0", "rr", "0", "rrv", "v"],
-    ["_A", "v", "rrv", "vv", "_E", "v", "r"],
-    ["vv", "r", "_B", "0", "r", "rr", "_F"],
-    ["0", "vvr", "v", "rr", "vvr", "v", "0"],
-    ["_v", "0", "vv", "_D", "r", "0", "rrrv"]
+    "vvvr", "r", "v", "_C", "rr", "0", "_r",
+    "r", "vv", "0", "rr", "0", "rrv", "v",
+    "_A", "v", "rrv", "vv", "_E", "v", "r",
+    "vv", "r", "_B", "0", "r", "rr", "_F",
+    "0", "vvr", "v", "rr", "vvr", "v", "0",
+    "_v", "0", "vv", "_D", "r", "0", "rrrv"
 
   ];
 
@@ -124,6 +124,15 @@ export class AppComponent {
   }
 
   getBackground(row, column) {
-    return "assets/" + this.background[column][row] + ".png";
+    return "assets/" + this.background[row + column * 7] + ".png";
+  }
+
+  getRoadCount(index) {
+    let count = 0;
+    this.data.forEach(element => {
+      if (element == index)
+        count++;
+    });
+    return count;
   }
 }
