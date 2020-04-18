@@ -36,7 +36,7 @@ export class AppComponent {
   getRotate(row, column) {
 
     if (row > 7) {
-      switch (column) {
+      switch (column + 1) {
         case 1:
           return 180;
         case 2:
