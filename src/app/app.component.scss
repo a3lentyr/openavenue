@@ -18,7 +18,7 @@
     color: #fff;
     line-height: 20px;
     text-align: center;
-    background: #000
+    background: rgba(0,0,0,0.7)
 }
 
 .backgroundCellImage{
@@ -44,7 +44,7 @@
     border-collapse:collapse;
 }
 .backgroundTableCell{
-    border: 0.1px solid black;
+    border: 1px solid black;
 }
 
 .container{
@@ -55,6 +55,7 @@
     margin:0;
     height: calc(100% - 10px);
     position: relative;
+    max-width: 600px;
 }
 
 .unselectable {
