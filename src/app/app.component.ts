@@ -20,6 +20,15 @@ export class AppComponent {
 
   ];
 
+  cardData = [1, 1, 1, 11, 11, 11, 11, 2, 2, 2, 12, 12, 12, 12, 3, 3, 3, 13, 13, 13, 13, 4, 4, 4, 14, 14, 14, 14, 5, 5, 5, 5, 15, 15, 15, 6, 6, 6, 6, 16, 16, 16]
+
+  playIndex = 0;
+  cityData = ["A", "B", "C", "D", "E"];
+  currentCityIndex = 0;
+  currentCityAdvance = 0;
+
+  playHistory = [];
+
   constructor() {
     for (let index = 0; index < 6 * 7; index++) {
       this.data.push(0);
@@ -31,6 +40,50 @@ export class AppComponent {
     for (let index = 0; index < 7; index++) {
       this.dataRow.push(index);
     }
+    this.initPlay();
+  }
+
+
+  initPlay() {
+    //this.background = this.shuffle(this.background);
+
+    this.cardData = this.shuffle(this.cardData);
+    this.cityData = this.shuffle(this.cityData);
+    this.currentCityIndex = 0;
+    this.currentCityAdvance = 0;
+    this.playIndex = 0;
+  }
+
+  advancePlay() {
+
+    if (this.currentCityAdvance >= 3) {
+      this.currentCityAdvance = 0;
+
+      this.currentCityIndex += 1;
+    }
+
+
+    this.playIndex += 1;
+    if (this.cardData[this.playIndex] > 10) {
+      this.currentCityAdvance += 1;
+    }
+  }
+
+  getCurrentCity() {
+    return this.cityData[this.currentCityIndex];
+  }
+
+  reversePlay() {
+    if (this.playIndex <= 0) {
+      return
+    }
+    var index = this.playHistory.pop();
+    this.data[index] = 0;
+    this.playIndex -= 1;
+  }
+
+  getCurrentCard() {
+    return (this.cardData[this.playIndex] % 10) - 1;
   }
 
   getRotate(row, column) {
@@ -120,7 +173,12 @@ export class AppComponent {
   }
 
   onClick(row, column) {
-    this.data[row + column * 7] = (this.data[row + column * 7] + 1) % 7
+    if (this.data[row + column * 7] > 0) {
+      return
+    }
+    this.data[row + column * 7] = this.getCurrentCard() + 1;
+    this.playHistory.push(row + column * 7);
+    this.advancePlay();
   }
 
   getBackground(row, column) {
@@ -134,5 +192,20 @@ export class AppComponent {
         count++;
     });
     return count;
+  }
+
+  /**
+ * Shuffles array in place.
+ * @param {Array} a items An array containing the items.
+ */
+  shuffle(a) {
+    var j, x, i;
+    for (i = a.length - 1; i > 0; i--) {
+      j = Math.floor(Math.random() * (i + 1));
+      x = a[i];
+      a[i] = a[j];
+      a[j] = x;
+    }
+    return a;
   }
 }

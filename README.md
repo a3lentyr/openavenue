@@ -1,5 +1,7 @@
 # Vigneonline
 
+This project is a boardgame inspired by [Avenue](https://boardgamegeek.com/boardgame/205045/avenue), and made to be able to play it online via video conferencing.
+
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 8.1.2.
 
 ## Development server

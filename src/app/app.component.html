@@ -1,56 +1,94 @@
-<div class="container disable-dbl-tap-zoom">
+<mat-sidenav-container class="example-container">
+  <mat-sidenav #sidenav mode="over" [(opened)]="opened">Sidenav content</mat-sidenav>
+  <mat-sidenav-content>
 
-
-  <table style="width:100%;height:87.5%" cellspacing="0" cellpadding="1">
-    <tr *ngFor="let row of dataRow">
-      <td *ngFor="let column of dataColumn" class="boardCell backgroundTableCell unselectable"
-        (click)="onClick(row,column)">
-        <img [src]="getBackground(row,column)" class="backgroundCellImage" />
-
-        <svg *ngIf="getHiddenAngle(row,column)" width="100%" height="100%" viewBox="0 0 90 90" class="svgImage">
-          <g [attr.transform]="'rotate('+getRotate(row,column)+' 45 45)'">
-
-            <path d="M 45 45 l 45 0" stroke="rgba(0,0,0,0.7)" stroke-width="10" fill="none" />
-            <path d="M 45 45 l 0 45" stroke="rgba(0,0,0,0.7)" stroke-width="10" fill="none" />
-          </g>
-        </svg>
-
-        <svg *ngIf="getHiddenline(row,column)" width="100%" height="100%" viewBox="0 0 90 90" class="svgImage">
-          <g [attr.transform]="'rotate('+getRotate(row,column)+' 45 45)'">
-
-            <path d="M 0 45 l 90 0" stroke="rgba(0,0,0,0.7)" stroke-width="10" fill="none" />
-          </g>
-        </svg>
-        <span *ngIf="getHiddentext(row,column)" class="dataText">{{data[row + column * 7]}}</span>
-
-      </td>
-    </tr>
-  </table>
-
-
-  <div class="help">
-    <table style="width:100%;height:12.5%">
-      <tr>
-        <td *ngFor="let column of dataColumn" class="boardCell unselectable">
-          <svg *ngIf="getHiddenAngle(10,column)" width="100%" height="50%" viewBox="0 0 90 90">
-            <g [attr.transform]="'rotate('+getRotate(10,column)+' 45 45)'">
+    <mat-toolbar color="primary">
+      <mat-toolbar-row>
+        <button mat-icon-button color="white" aria-label="Menu" (click)="sidenav.toggle()">
+          <mat-icon>menu</mat-icon>
+        </button>
+        <div class="currentCard unselectable" (click)="reversePlay()">
+          <svg *ngIf="getHiddenAngle(10,getCurrentCard())" width="100%" height="100%" viewBox="0 0 90 90">
+            <g [attr.transform]="'rotate('+getRotate(10,getCurrentCard())+' 45 45)'">
 
               <path d="M 45 45 l 45 0" stroke="black" stroke-width="10" fill="none" />
               <path d="M 45 45 l 0 45" stroke="black" stroke-width="10" fill="none" />
             </g>
           </svg>
 
-          <svg *ngIf="getHiddenline(10,column)" width="100%" height="50%" viewBox="0 0 90 90">
-            <g [attr.transform]="'rotate('+getRotate(10,column)+' 45 45)'">
+          <svg *ngIf="getHiddenline(10,getCurrentCard())" width="100%" height="100%" viewBox="0 0 90 90">
+            <g [attr.transform]="'rotate('+getRotate(10,getCurrentCard())+' 45 45)'">
 
               <path d="M 0 45 l 90 0" stroke="black" stroke-width="10" fill="none" />
             </g>
           </svg>
-          <span class="dataText">{{column+1}}</span>
-          <span class="countText">{{getRoadCount(column+1)}}/7</span>
+          <span class="dataText">{{getCurrentCard()+1}}</span>
+        </div>
+        <span>
+          {{getCurrentCity()}}
+        </span>
+        <span>
+          {{currentCityAdvance+1}}/4
+        </span>
+      </mat-toolbar-row>
 
-        </td>
-      </tr>
-    </table>
-  </div>
-</div>
+    </mat-toolbar>
+
+
+    <div class="container disable-dbl-tap-zoom">
+
+
+      <table cellspacing="0" cellpadding="1" class="boardTable">
+        <tr *ngFor="let row of dataRow">
+          <td *ngFor="let column of dataColumn" class="boardCell backgroundTableCell unselectable"
+            (click)="onClick(row,column)">
+            <img [src]="getBackground(row,column)" class="backgroundCellImage" />
+
+            <svg *ngIf="getHiddenAngle(row,column)" width="100%" height="100%" viewBox="0 0 90 90" class="svgImage">
+              <g [attr.transform]="'rotate('+getRotate(row,column)+' 45 45)'">
+
+                <path d="M 45 45 l 45 0" stroke="rgba(0,0,0,0.7)" stroke-width="10" fill="none" />
+                <path d="M 45 45 l 0 45" stroke="rgba(0,0,0,0.7)" stroke-width="10" fill="none" />
+              </g>
+            </svg>
+
+            <svg *ngIf="getHiddenline(row,column)" width="100%" height="100%" viewBox="0 0 90 90" class="svgImage">
+              <g [attr.transform]="'rotate('+getRotate(row,column)+' 45 45)'">
+
+                <path d="M 0 45 l 90 0" stroke="rgba(0,0,0,0.7)" stroke-width="10" fill="none" />
+              </g>
+            </svg>
+            <span *ngIf="getHiddentext(row,column)" class="dataText">{{data[row + column * 7]}}</span>
+
+          </td>
+        </tr>
+      </table>
+
+
+
+    </div>
+
+    <div class="help">
+      <div *ngFor="let column of dataColumn" class="boardCell unselectable">
+        <svg *ngIf="getHiddenAngle(10,column)" width="100%" height="50%" viewBox="0 0 90 90">
+          <g [attr.transform]="'rotate('+getRotate(10,column)+' 45 45)'">
+
+            <path d="M 45 45 l 45 0" stroke="black" stroke-width="10" fill="none" />
+            <path d="M 45 45 l 0 45" stroke="black" stroke-width="10" fill="none" />
+          </g>
+        </svg>
+
+        <svg *ngIf="getHiddenline(10,column)" width="100%" height="50%" viewBox="0 0 90 90">
+          <g [attr.transform]="'rotate('+getRotate(10,column)+' 45 45)'">
+
+            <path d="M 0 45 l 90 0" stroke="black" stroke-width="10" fill="none" />
+          </g>
+        </svg>
+        <span class="dataText">{{column+1}}</span>
+        <span class="countText">{{getRoadCount(column+1)}}/7</span>
+
+      </div>
+    </div>
+
+  </mat-sidenav-content>
+</mat-sidenav-container>
