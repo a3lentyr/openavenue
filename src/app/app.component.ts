@@ -26,6 +26,7 @@ export class AppComponent {
   cityData = ["A", "B", "C", "D", "E"];
   currentCityIndex = 0;
   currentCityAdvance = 0;
+  currentCityAdvanceList = [];
 
   playHistory = [];
 
@@ -52,25 +53,36 @@ export class AppComponent {
     this.currentCityIndex = 0;
     this.currentCityAdvance = 0;
     this.playIndex = 0;
+
+    if (this.cardData[this.playIndex] > 10) {
+      this.currentCityAdvance += 1;
+      this.currentCityAdvanceList.push(0);
+    }
   }
 
   advancePlay() {
 
-    if (this.currentCityAdvance >= 3) {
-      this.currentCityAdvance = 0;
-
-      this.currentCityIndex += 1;
+    if (this.currentCityAdvance >= 4) {
+      this.advanceCity();
     }
-
 
     this.playIndex += 1;
     if (this.cardData[this.playIndex] > 10) {
       this.currentCityAdvance += 1;
+      this.currentCityAdvanceList.push(0);
     }
   }
 
+  advanceCity() {
+
+    this.currentCityAdvance = 0;
+    this.currentCityAdvanceList = [];
+
+    this.currentCityIndex += 1;
+  }
+
   getCurrentCity() {
-    return this.cityData[this.currentCityIndex];
+    return "assets/_" + this.cityData[this.currentCityIndex] + ".png";
   }
 
   reversePlay() {
@@ -79,7 +91,27 @@ export class AppComponent {
     }
     var index = this.playHistory.pop();
     this.data[index] = 0;
+
+    if (this.cardData[this.playIndex] > 10) {
+      this.currentCityAdvance -= 1;
+      this.currentCityAdvanceList.pop();
+    }
+
     this.playIndex -= 1;
+    if (this.cardData[this.playIndex] > 10) {
+      this.reverseCity();
+    }
+  }
+
+  reverseCity() {
+
+
+    if (this.currentCityAdvance <= 0) {
+      this.currentCityAdvance = 4;
+      this.currentCityAdvanceList = [0, 0, 0, 0]
+
+      this.currentCityIndex -= 1;
+    }
   }
 
   getCurrentCard() {
@@ -170,6 +202,10 @@ export class AppComponent {
       default:
         return true;
     }
+  }
+
+  isCurrentYellow() {
+    return this.cardData[this.playIndex] > 10;
   }
 
   onClick(row, column) {
