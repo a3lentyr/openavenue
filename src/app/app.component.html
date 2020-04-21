@@ -1,21 +1,22 @@
 <mat-sidenav-container class="navcontainer disable-dbl-tap-zoom">
   <mat-sidenav #sidenav [mode]="isLargeScreen() ? 'side' : 'over'" [opened]="isLargeScreen()" class="sidenav">
     <div class="scoreRow">
-      <h1>Vigne Online</h1>
-      <mat-form-field class="example-full-width">
+      <h2 (click)="sidenav.toggle()">Vigne Online</h2>
+      <mat-form-field class="full-width">
         <span matPrefix>Scenario # &nbsp;</span>
         <input type="tel" matInput [value]="initSeed" (input)="onSeedChange($event.target.value)" class="inputScenario">
       </mat-form-field>
+      <mat-slide-toggle [(ngModel)]="mapRandom" (change)="onSeedChange(initSeed)">Random Map</mat-slide-toggle>
     </div>
 
 
     <div class="scoreRow">
-      <span>Total Score : </span> <span>{{totalScore}}</span>
       <div *ngFor="let row of scoreHistory">
         <span class="scoreLeft">{{row[0]}}</span> <span class="scoreRight">{{row[1]}}</span>
       </div>
-
-
+      <span>
+        <h3>Total Score : <span>{{totalScore}}</span></h3>
+      </span>
 
     </div>
   </mat-sidenav>
@@ -44,15 +45,13 @@
           </svg>
           <span class="dataText">{{getCurrentCard()+1}}</span>
         </div>
-        <span>Score : {{totalScore}}</span>
-        <span class="citycontainer">
-          <img [src]="getCurrentCity()" class="currentCityImage" />
-        </span>
         <div class="advanceCounterList">
 
           <span class="advanceCounter" *ngFor="let c of currentCityAdvanceList">
           </span>
         </div>
+        <span>Score : {{totalScore}}</span>
+
       </mat-toolbar-row>
 
     </mat-toolbar>
@@ -64,7 +63,7 @@
       <table cellspacing="0" cellpadding="1" class="boardTable">
         <tr *ngFor="let row of dataRow">
           <td *ngFor="let column of dataColumn" class="boardCell backgroundTableCell unselectable"
-            (click)="onClick(row,column)">
+            [ngClass]="{'currentYellow':isCurrentCity(row,column)}" (click)="onClick(row,column)">
             <img [src]="getBackground(row,column)" class="backgroundCellImage" />
 
             <svg *ngIf="getHiddenAngle(row,column)" width="100%" height="100%" viewBox="0 0 90 90" class="svgImage">

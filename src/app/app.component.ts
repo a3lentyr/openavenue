@@ -10,7 +10,8 @@ export class AppComponent {
   data = [];
   dataColumn = [];
   dataRow = [];
-  background = [
+  background = [];
+  REFbackground = [
     "vvvr", "r", "v", "_C", "rr", "0", "_r",
     "r", "vv", "0", "rr", "0", "rrv", "v",
     "_A", "v", "rrv", "vv", "_E", "v", "r",
@@ -20,10 +21,13 @@ export class AppComponent {
 
   ];
 
-  cardData = [1, 1, 1, 11, 11, 11, 11, 2, 2, 2, 12, 12, 12, 12, 3, 3, 3, 13, 13, 13, 13, 4, 4, 4, 14, 14, 14, 14, 5, 5, 5, 5, 15, 15, 15, 6, 6, 6, 6, 16, 16, 16]
+  REFcardData = [1, 1, 1, 11, 11, 11, 11, 2, 2, 2, 12, 12, 12, 12, 3, 3, 3, 13, 13, 13, 13, 4, 4, 4, 14, 14, 14, 14, 5, 5, 5, 5, 15, 15, 15, 6, 6, 6, 6, 16, 16, 16]
+  cardData = [];
 
   playIndex = 0;
-  cityData = ["A", "B", "C", "D", "E"];
+  cityData = [];
+  REFcityData = ["A", "B", "C", "D", "E"];
+
   currentCityIndex = 0;
   currentCityAdvance = 0;
   currentCityAdvanceList = [];
@@ -31,6 +35,8 @@ export class AppComponent {
   playHistory = [];
   seed = 1;
   initSeed = Math.floor(Math.random() * 10000);
+
+  mapRandom = false;
 
   currentScore = 0;
   totalScore = 0;
@@ -52,10 +58,15 @@ export class AppComponent {
 
 
   initPlay() {
-    //this.background = this.shuffle(this.background);
+    this.background = this.REFbackground.slice();
 
-    this.cardData = this.shuffle(this.cardData);
-    this.cityData = this.shuffle(this.cityData);
+    if (this.mapRandom) {
+      this.shuffle(this.background);
+
+    }
+
+    this.cardData = this.shuffle(this.REFcardData.slice());
+    this.cityData = this.shuffle(this.REFcityData.slice());
 
     this.currentCityIndex = 0;
     this.currentCityAdvance = 0;
@@ -236,6 +247,7 @@ export class AppComponent {
   }
 
   onClick(row, column) {
+
     if (this.data[row + column * 7] > 0) {
       return
     }
@@ -303,50 +315,62 @@ export class AppComponent {
     switch (this.data[cell]) {
       case 1:
         if (cell >= 7) {
-          result += this.countScore(cell - 7, explored);
+          if ([2, 3, 5].includes(this.data[cell - 7]))
+            result += this.countScore(cell - 7, explored);
         }
         if (cell % 7 != 0) {
-          result += this.countScore(cell - 1, explored);
+          if ([3, 4, 6].includes(this.data[cell - 1]))
+            result += this.countScore(cell - 1, explored);
         }
         break;
       case 2:
         if (cell < 7 * 5) {
-          result += this.countScore(cell + 7, explored);
+          if ([1, 4, 5].includes(this.data[cell + 7]))
+            result += this.countScore(cell + 7, explored);
         }
         if (cell % 7 != 0) {
-          result += this.countScore(cell - 1, explored);
+          if ([3, 4, 6].includes(this.data[cell - 1]))
+            result += this.countScore(cell - 1, explored);
         }
         break;
       case 3:
         if (cell < 7 * 5) {
-          result += this.countScore(cell + 7, explored);
+          if ([1, 4, 5].includes(this.data[cell + 7]))
+            result += this.countScore(cell + 7, explored);
         }
         if (cell % 7 != 6) {
-          result += this.countScore(cell + 1, explored);
+          if ([1, 2, 6].includes(this.data[cell + 1]))
+            result += this.countScore(cell + 1, explored);
         }
         break;
       case 4:
         if (cell >= 7) {
-          result += this.countScore(cell - 7, explored);
+          if ([2, 3, 5].includes(this.data[cell - 7]))
+            result += this.countScore(cell - 7, explored);
         }
         if (cell % 7 != 6) {
-          result += this.countScore(cell + 1, explored);
+          if ([1, 2, 6].includes(this.data[cell + 1]))
+            result += this.countScore(cell + 1, explored);
         }
         break;
       case 5:
         if (cell >= 7) {
-          result += this.countScore(cell - 7, explored);
+          if ([2, 3, 5].includes(this.data[cell - 7]))
+            result += this.countScore(cell - 7, explored);
         }
         if (cell < 7 * 5) {
-          result += this.countScore(cell + 7, explored);
+          if ([1, 4, 5].includes(this.data[cell + 7]))
+            result += this.countScore(cell + 7, explored);
         }
         break;
       case 6:
         if (cell % 7 != 6) {
-          result += this.countScore(cell + 1, explored);
+          if ([1, 2, 6].includes(this.data[cell + 1]))
+            result += this.countScore(cell + 1, explored);
         }
         if (cell % 7 != 0) {
-          result += this.countScore(cell - 1, explored);
+          if ([3, 4, 6].includes(this.data[cell - 1]))
+            result += this.countScore(cell - 1, explored);
         }
         break;
 
@@ -366,15 +390,18 @@ export class AppComponent {
       const element = this.cityData[index];
       if (index == this.currentCityIndex) {
         var score = this.countScore(this.background.indexOf("_" + element), []);
+
         if (score <= 0 || score <= previousScore) {
           score = -5;
         }
+
         this.totalScore += score;
         newHistory.push([element, score]);
 
       } else {
         if (index < this.currentCityIndex) {
           newHistory.push(this.scoreHistory[index]);
+          previousScore = this.scoreHistory[index][1]
         } else {
           newHistory.push(["?", 0]);
         }
@@ -395,5 +422,9 @@ export class AppComponent {
     } else {
       return false;
     }
+  }
+
+  isCurrentCity(row, column) {
+    return this.background[row + column * 7] == "_" + this.cityData[this.currentCityIndex];
   }
 }

@@ -145,12 +145,15 @@
 .scoreRow{
     margin:auto;
     margin:5px;
+    padding:5px;
     text-align: center;
+    width:200px;
+    border-bottom: 1px solid white;
 }
 
 .scoreRight{
     margin:5px;
-    width:80px;
+    width:30px;
     display: inline-block;
     background-color: rgba(0,0,0,0.2);
     text-align: right;
@@ -158,7 +161,7 @@
 }
 
 .scoreLeft{
-    width:100px;
+    width:80px;
     display: inline-flex;
 }
 
@@ -166,5 +169,10 @@
     background-color: rgba(0,0,0,0.2);
     padding-left:10px;
     padding-left:10px;
+    width: calc(100% - 20px);
 
+}
+
+.full-width{
+    width:100%;
 }
