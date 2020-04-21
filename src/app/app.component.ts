@@ -1,5 +1,8 @@
 import { Component } from '@angular/core';
 
+import { Router, ActivatedRoute } from '@angular/router';
+import { MatSnackBar } from '@angular/material/snack-bar';
+
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -43,7 +46,9 @@ export class AppComponent {
   totalScore = 0;
   scoreHistory = []
 
-  constructor() {
+  constructor(
+    private router: Router,
+    private route: ActivatedRoute, private _snackBar: MatSnackBar) {
     for (let index = 0; index < 6 * 7; index++) {
       this.data.push(0);
 
@@ -54,9 +59,28 @@ export class AppComponent {
     for (let index = 0; index < 7; index++) {
       this.dataRow.push(index);
     }
-    this.initPlay();
   }
 
+  ngOnInit(): void {
+    // take the current search term
+    if (this.route.snapshot.queryParams.search) {
+      this.initSeed = this.route.snapshot.queryParams.search;
+    } else {
+
+      this.router.navigate([], { queryParams: { s: this.initSeed } });
+    }
+    this.initPlay();
+
+    this.route.queryParams.subscribe(query => {
+      if (query.s && query.s != this.initSeed) {
+        this.initSeed = query.s;
+        console.log(query.s);
+        this.initPlay();
+
+      }
+    })
+
+  }
 
   initPlay() {
     this.playEnded = false;
@@ -303,12 +327,13 @@ export class AppComponent {
   onSeedChange(value) {
     if (value != "") {
       this.initSeed = value;
+      this.router.navigate([], { queryParams: { s: this.initSeed } });
       this.initPlay();
     }
 
   }
 
-  countScore(cell, explored) {
+  countScore(cell, explored, match = 0) {
     if (this.data[cell] == 0) {
       return 0;
     }
@@ -317,70 +342,77 @@ export class AppComponent {
       return 0;
     }
     explored.push(cell);
+    var resultR = 0;
+    var resultV = 0;
+    if (match != 2) {
+      resultR = (this.background[cell].match(/r/g) || []).length - (this.background[cell].match(/_r/g) || []).length;
+    }
 
-    var resultR = (this.background[cell].match(/r/g) || []).length - (this.background[cell].match(/_r/g) || []).length;
-    var resultV = (this.background[cell].match(/v/g) || []).length - (this.background[cell].match(/_v/g) || []).length;
+    if (match != 1) {
+      resultV = (this.background[cell].match(/v/g) || []).length - (this.background[cell].match(/_v/g) || []).length;
+    }
+
     var result = resultR + resultV;
 
     switch (this.data[cell]) {
       case 1:
         if (cell >= 7) {
           if ([2, 3, 5].includes(this.data[cell - 7]))
-            result += this.countScore(cell - 7, explored);
+            result += this.countScore(cell - 7, explored, match);
         }
         if (cell % 7 != 0) {
           if ([3, 4, 6].includes(this.data[cell - 1]))
-            result += this.countScore(cell - 1, explored);
+            result += this.countScore(cell - 1, explored, match);
         }
         break;
       case 2:
         if (cell < 7 * 5) {
           if ([1, 4, 5].includes(this.data[cell + 7]))
-            result += this.countScore(cell + 7, explored);
+            result += this.countScore(cell + 7, explored, match);
         }
         if (cell % 7 != 0) {
           if ([3, 4, 6].includes(this.data[cell - 1]))
-            result += this.countScore(cell - 1, explored);
+            result += this.countScore(cell - 1, explored, match);
         }
         break;
       case 3:
         if (cell < 7 * 5) {
           if ([1, 4, 5].includes(this.data[cell + 7]))
-            result += this.countScore(cell + 7, explored);
+            result += this.countScore(cell + 7, explored, match);
         }
         if (cell % 7 != 6) {
           if ([1, 2, 6].includes(this.data[cell + 1]))
-            result += this.countScore(cell + 1, explored);
+            result += this.countScore(cell + 1, explored, match);
         }
         break;
       case 4:
         if (cell >= 7) {
           if ([2, 3, 5].includes(this.data[cell - 7]))
-            result += this.countScore(cell - 7, explored);
+            result += this.countScore(cell - 7, explored, match);
         }
         if (cell % 7 != 6) {
           if ([1, 2, 6].includes(this.data[cell + 1]))
-            result += this.countScore(cell + 1, explored);
+            result += this.countScore(cell + 1, explored, match);
         }
         break;
       case 5:
         if (cell >= 7) {
           if ([2, 3, 5].includes(this.data[cell - 7]))
-            result += this.countScore(cell - 7, explored);
+            result += this.countScore(cell - 7, explored, match);
         }
         if (cell < 7 * 5) {
           if ([1, 4, 5].includes(this.data[cell + 7]))
-            result += this.countScore(cell + 7, explored);
+            result += this.countScore(cell + 7, explored, match);
         }
         break;
       case 6:
         if (cell % 7 != 6) {
           if ([1, 2, 6].includes(this.data[cell + 1]))
-            result += this.countScore(cell + 1, explored);
+            result += this.countScore(cell + 1, explored, match);
         }
         if (cell % 7 != 0) {
           if ([3, 4, 6].includes(this.data[cell - 1]))
-            result += this.countScore(cell - 1, explored);
+            result += this.countScore(cell - 1, explored, match);
         }
         break;
 
@@ -419,8 +451,8 @@ export class AppComponent {
       }
     }
 
-    newHistory.push(["Castle 1", this.countScore(this.background.indexOf("_v"), [])]);
-    newHistory.push(["Castle 2", this.countScore(this.background.indexOf("_r"), [])]);
+    newHistory.push(["Castle R", this.countScore(this.background.indexOf("_r"), [], 1)]);
+    newHistory.push(["Castle G", this.countScore(this.background.indexOf("_v"), [], 2)]);
 
     this.scoreHistory = newHistory;
 
@@ -445,5 +477,23 @@ export class AppComponent {
     }
 
     return this.scoreHistory[this.currentCityIndex - 1][1];
+  }
+
+  share() {
+    const selBox = document.createElement('textarea');
+    selBox.style.position = 'fixed';
+    selBox.style.left = '0';
+    selBox.style.top = '0';
+    selBox.style.opacity = '0';
+    selBox.value = window.location.href;
+    document.body.appendChild(selBox);
+    selBox.focus();
+    selBox.select();
+    document.execCommand('copy');
+    document.body.removeChild(selBox);
+
+    this._snackBar.open("Link copied", "Oh Yeah !", {
+      duration: 2000,
+    });
   }
 }

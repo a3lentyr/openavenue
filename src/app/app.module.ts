@@ -11,6 +11,16 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
+
+import { RouterModule, Routes } from '@angular/router';
+
+const routes: Routes = [
+  {
+    path: '',
+    component: AppComponent,
+  },
+];
 
 @NgModule({
   declarations: [
@@ -25,7 +35,9 @@ import { MatSlideToggleModule } from '@angular/material/slide-toggle';
     MatIconModule,
     MatInputModule,
     MatSlideToggleModule,
-    FormsModule
+    FormsModule,
+    RouterModule.forRoot(routes),
+    MatSnackBarModule
   ],
   providers: [],
   bootstrap: [AppComponent]
