@@ -76,7 +76,6 @@
 
     width: calc( 100% - 5px);
     max-width:560px;
-    height: 12.5%;
     margin:2px;
 }
 
@@ -84,6 +83,10 @@
     touch-action: manipulation;
   }
 
+  .sidenav{
+      background-color: #673ab7;
+      color:white;
+  }
 
 .countText{
     position: absolute;
@@ -136,4 +139,8 @@
 
 .currentYellow{
     background: yellow;
+}
+
+.navcontainer{
+    height:100%;
 }

@@ -29,6 +29,12 @@ export class AppComponent {
   currentCityAdvanceList = [];
 
   playHistory = [];
+  seed = 1;
+  initSeed = 1;
+
+  currentScore = 0;
+  totalScore = 0;
+  scoreHistory = []
 
   constructor() {
     for (let index = 0; index < 6 * 7; index++) {
@@ -50,14 +56,26 @@ export class AppComponent {
 
     this.cardData = this.shuffle(this.cardData);
     this.cityData = this.shuffle(this.cityData);
+
     this.currentCityIndex = 0;
     this.currentCityAdvance = 0;
+    this.currentCityAdvanceList = [];
     this.playIndex = 0;
+    this.playHistory = [];
+    this.scoreHistory = [];
+    this.currentScore = 0;
+    this.totalScore = 0;
+
+    this.data = [];
+    for (let index = 0; index < 6 * 7; index++) {
+      this.data.push(0);
+    }
 
     if (this.cardData[this.playIndex] > 10) {
       this.currentCityAdvance += 1;
       this.currentCityAdvanceList.push(0);
     }
+    this.computeCompleteScore();
   }
 
   advancePlay() {
@@ -71,10 +89,17 @@ export class AppComponent {
       this.currentCityAdvance += 1;
       this.currentCityAdvanceList.push(0);
     }
+
+    this.currentScore = this.countScore(this.findCurrentCity(), []);
+    this.computeCompleteScore();
+  }
+
+  findCurrentCity() {
+    var cityString = "_" + this.cityData[this.currentCityIndex];
+    return this.background.indexOf(cityString);
   }
 
   advanceCity() {
-
     this.currentCityAdvance = 0;
     this.currentCityAdvanceList = [];
 
@@ -101,6 +126,8 @@ export class AppComponent {
     if (this.cardData[this.playIndex] > 10) {
       this.reverseCity();
     }
+    this.currentScore = this.countScore(this.findCurrentCity(), []);
+    this.computeCompleteScore();
   }
 
   reverseCity() {
@@ -237,11 +264,122 @@ export class AppComponent {
   shuffle(a) {
     var j, x, i;
     for (i = a.length - 1; i > 0; i--) {
-      j = Math.floor(Math.random() * (i + 1));
+      j = Math.floor(this.random() * (i + 1));
       x = a[i];
       a[i] = a[j];
       a[j] = x;
     }
     return a;
+  }
+
+  random() {
+    var x = Math.sin(this.seed++) * 10000;
+    return x - Math.floor(x);
+  }
+
+  onSeedChange(value) {
+    if (value != "") {
+      this.initSeed = value;
+      this.seed = value;
+      this.initPlay();
+    }
+
+  }
+
+  countScore(cell, explored) {
+    if (this.data[cell] == 0) {
+      return 0;
+    }
+
+    if (explored.includes(cell)) {
+      return 0;
+    }
+    explored.push(cell);
+
+    var resultR = (this.background[cell].match(/r/g) || []).length - (this.background[cell].match(/_r/g) || []).length;
+    var resultV = (this.background[cell].match(/v/g) || []).length - (this.background[cell].match(/_v/g) || []).length;
+    var result = resultR + resultV;
+
+    switch (this.data[cell]) {
+      case 1:
+        if (cell >= 7) {
+          result += this.countScore(cell - 7, explored);
+        }
+        if (cell % 7 != 0) {
+          result += this.countScore(cell - 1, explored);
+        }
+        break;
+      case 2:
+        if (cell < 7 * 5) {
+          result += this.countScore(cell + 7, explored);
+        }
+        if (cell % 7 != 0) {
+          result += this.countScore(cell - 1, explored);
+        }
+        break;
+      case 3:
+        if (cell < 7 * 5) {
+          result += this.countScore(cell + 7, explored);
+        }
+        if (cell % 7 != 6) {
+          result += this.countScore(cell + 1, explored);
+        }
+        break;
+      case 4:
+        if (cell >= 7) {
+          result += this.countScore(cell - 7, explored);
+        }
+        if (cell % 7 != 6) {
+          result += this.countScore(cell + 1, explored);
+        }
+        break;
+      case 5:
+        if (cell >= 7) {
+          result += this.countScore(cell - 7, explored);
+        }
+        if (cell < 7 * 5) {
+          result += this.countScore(cell + 7, explored);
+        }
+        break;
+      case 6:
+        if (cell % 7 != 6) {
+          result += this.countScore(cell + 1, explored);
+        }
+        if (cell % 7 != 0) {
+          result += this.countScore(cell - 1, explored);
+        }
+        break;
+
+      default:
+        break;
+    }
+    return result;
+
+  }
+
+  computeCompleteScore() {
+    this.scoreHistory = [];
+    this.totalScore = 0;
+
+    var previousScore = 0;
+    for (let index = 0; index < this.cityData.length; index++) {
+      const element = this.cityData[index];
+      if (index <= this.currentCityIndex) {
+        var score = this.countScore(this.background.indexOf("_" + element), []);
+        if (score <= 0 || score <= previousScore) {
+          score = -5;
+        }
+        this.totalScore += score;
+        this.scoreHistory.push([element, score]);
+
+      } else {
+        this.scoreHistory.push(["?", 0]);
+      }
+    }
+
+    this.scoreHistory.push(["Castle 1", this.countScore(this.background.indexOf("_v"), [])]);
+    this.scoreHistory.push(["Castle 2", this.countScore(this.background.indexOf("_r"), [])]);
+
+
   }
 }
