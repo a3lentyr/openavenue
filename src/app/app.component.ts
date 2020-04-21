@@ -449,9 +449,11 @@ export class AppComponent {
         }
       }
     }
-
-    newHistory.push(["Castle R", this.countScore(this.background.indexOf("_r"), [], 1)]);
-    newHistory.push(["Castle G", this.countScore(this.background.indexOf("_v"), [], 2)]);
+    var castR = this.countScore(this.background.indexOf("_r"), [], 1);
+    newHistory.push(["Castle R", castR]);
+    var castG = this.countScore(this.background.indexOf("_v"), [], 2);
+    newHistory.push(["Castle G", castG]);
+    this.totalScore += castR + castG;
 
     this.scoreHistory = newHistory;
 
@@ -479,6 +481,8 @@ export class AppComponent {
   }
 
   share() {
+
+    this.router.navigate([], { queryParams: { s: this.initSeed } });
     const selBox = document.createElement('textarea');
     selBox.style.position = 'fixed';
     selBox.style.left = '0';
