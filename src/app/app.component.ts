@@ -65,16 +65,12 @@ export class AppComponent {
     // take the current search term
     if (this.route.snapshot.queryParams.search) {
       this.initSeed = this.route.snapshot.queryParams.search;
-    } else {
-
-      this.router.navigate([], { queryParams: { s: this.initSeed } });
     }
     this.initPlay();
 
     this.route.queryParams.subscribe(query => {
       if (query.s && query.s != this.initSeed) {
         this.initSeed = query.s;
-        console.log(query.s);
         this.initPlay();
 
       }
@@ -118,6 +114,8 @@ export class AppComponent {
 
   advancePlay() {
 
+    this.router.navigate([], { queryParams: { s: this.initSeed } });
+
     this.currentScore = this.countScore(this.findCurrentCity(), []);
     this.computeCompleteScore();
 
@@ -131,12 +129,13 @@ export class AppComponent {
       this.currentCityAdvanceList.push(0);
     }
 
+    this.computeCompleteScore();
+
     if (this.currentCityIndex >= 5) {
       this.playEnded = true;
       return;
     }
     this.currentScore = this.countScore(this.findCurrentCity(), []);
-    this.computeCompleteScore();
   }
 
   findCurrentCity() {
@@ -428,7 +427,7 @@ export class AppComponent {
     this.totalScore = 0;
 
     var previousScore = 0;
-    for (let index = 0; index < this.cityData.length; index++) {
+    for (let index = 0; index < this.cityData.length - 1; index++) {
       const element = this.cityData[index];
       if (index == this.currentCityIndex) {
         var score = this.countScore(this.background.indexOf("_" + element), []);
