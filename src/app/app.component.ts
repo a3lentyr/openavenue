@@ -30,7 +30,7 @@ export class AppComponent {
 
   playHistory = [];
   seed = 1;
-  initSeed = 1;
+  initSeed = Math.floor(Math.random() * 10000);
 
   currentScore = 0;
   totalScore = 0;
@@ -358,28 +358,42 @@ export class AppComponent {
   }
 
   computeCompleteScore() {
-    this.scoreHistory = [];
+    var newHistory = [];
     this.totalScore = 0;
 
     var previousScore = 0;
     for (let index = 0; index < this.cityData.length; index++) {
       const element = this.cityData[index];
-      if (index <= this.currentCityIndex) {
+      if (index == this.currentCityIndex) {
         var score = this.countScore(this.background.indexOf("_" + element), []);
         if (score <= 0 || score <= previousScore) {
           score = -5;
         }
         this.totalScore += score;
-        this.scoreHistory.push([element, score]);
+        newHistory.push([element, score]);
 
       } else {
-        this.scoreHistory.push(["?", 0]);
+        if (index < this.currentCityIndex) {
+          newHistory.push(this.scoreHistory[index]);
+        } else {
+          newHistory.push(["?", 0]);
+        }
       }
     }
 
-    this.scoreHistory.push(["Castle 1", this.countScore(this.background.indexOf("_v"), [])]);
-    this.scoreHistory.push(["Castle 2", this.countScore(this.background.indexOf("_r"), [])]);
+    newHistory.push(["Castle 1", this.countScore(this.background.indexOf("_v"), [])]);
+    newHistory.push(["Castle 2", this.countScore(this.background.indexOf("_r"), [])]);
 
+    this.scoreHistory = newHistory;
 
+  }
+
+  isLargeScreen() {
+    const width = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
+    if (width > 720) {
+      return true;
+    } else {
+      return false;
+    }
   }
 }
