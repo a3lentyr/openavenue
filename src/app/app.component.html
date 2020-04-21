@@ -50,7 +50,24 @@
           <span class="advanceCounter" *ngFor="let c of currentCityAdvanceList">
           </span>
         </div>
-        <span>Score : {{totalScore}}</span>
+
+        <div class="scoreContainer"><span class="material-icons">
+            emoji_events
+          </span>
+          <span class="mediumScore">{{totalScore}}</span>
+        </div>
+
+        <div *ngIf="!playEnded" class="scoreContainer"><span class="material-icons">
+            track_changes
+          </span>
+          <span class="smallScore">{{getPreviousScore()}}</span>
+        </div>
+
+        <div *ngIf="!playEnded" class="scoreContainer"><span class="material-icons">
+            where_to_vote
+          </span>
+          <span class="smallScore">{{currentScore}}</span>
+        </div>
 
       </mat-toolbar-row>
 

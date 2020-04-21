@@ -26,7 +26,7 @@ export class AppComponent {
 
   playIndex = 0;
   cityData = [];
-  REFcityData = ["A", "B", "C", "D", "E"];
+  REFcityData = ["A", "B", "C", "D", "E", "F"];
 
   currentCityIndex = 0;
   currentCityAdvance = 0;
@@ -37,6 +37,7 @@ export class AppComponent {
   initSeed = Math.floor(Math.random() * 10000);
 
   mapRandom = false;
+  playEnded = false;
 
   currentScore = 0;
   totalScore = 0;
@@ -58,6 +59,8 @@ export class AppComponent {
 
 
   initPlay() {
+    this.playEnded = false;
+    this.seed = this.initSeed;
     this.background = this.REFbackground.slice();
 
     if (this.mapRandom) {
@@ -91,6 +94,9 @@ export class AppComponent {
 
   advancePlay() {
 
+    this.currentScore = this.countScore(this.findCurrentCity(), []);
+    this.computeCompleteScore();
+
     if (this.currentCityAdvance >= 4) {
       this.advanceCity();
     }
@@ -101,6 +107,10 @@ export class AppComponent {
       this.currentCityAdvanceList.push(0);
     }
 
+    if (this.currentCityIndex >= 5) {
+      this.playEnded = true;
+      return;
+    }
     this.currentScore = this.countScore(this.findCurrentCity(), []);
     this.computeCompleteScore();
   }
@@ -125,6 +135,7 @@ export class AppComponent {
     if (this.playIndex <= 0) {
       return
     }
+    this.playEnded = false;
     var index = this.playHistory.pop();
     this.data[index] = 0;
 
@@ -248,7 +259,7 @@ export class AppComponent {
 
   onClick(row, column) {
 
-    if (this.data[row + column * 7] > 0) {
+    if (this.data[row + column * 7] > 0 || this.playEnded) {
       return
     }
     this.data[row + column * 7] = this.getCurrentCard() + 1;
@@ -292,7 +303,6 @@ export class AppComponent {
   onSeedChange(value) {
     if (value != "") {
       this.initSeed = value;
-      this.seed = value;
       this.initPlay();
     }
 
@@ -402,6 +412,7 @@ export class AppComponent {
         if (index < this.currentCityIndex) {
           newHistory.push(this.scoreHistory[index]);
           previousScore = this.scoreHistory[index][1]
+          this.totalScore += previousScore;
         } else {
           newHistory.push(["?", 0]);
         }
@@ -426,5 +437,13 @@ export class AppComponent {
 
   isCurrentCity(row, column) {
     return this.background[row + column * 7] == "_" + this.cityData[this.currentCityIndex];
+  }
+
+  getPreviousScore() {
+    if (this.currentCityIndex == 0) {
+      return 0;
+    }
+
+    return this.scoreHistory[this.currentCityIndex - 1][1];
   }
 }
